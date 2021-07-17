@@ -801,11 +801,10 @@ impl<W: Write> Writer<W> {
     pub fn into_stream_writer_with_size(self, size: usize) -> Result<StreamWriter<'static, W>> {
         StreamWriter::new(ChunkOutput::Owned(self), size)
     }
-}
 
-impl<W: Write> Drop for Writer<W> {
-    fn drop(&mut self) {
+    pub fn into_inner(mut self) -> W {
         let _ = self.write_chunk(chunk::IEND, &[]);
+        self.w
     }
 }
 
